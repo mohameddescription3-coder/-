@@ -1,0 +1,83 @@
+import webbrowser
+import os
+
+# كود مصحف محمد اللحيدان الشامل
+html_content = """
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مصحف محمد اللحيدان - صدقة جارية</title>
+    <style>
+        body { background: #fdfaf1; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); max-width: 600px; margin: auto; border: 2px solid #2d5a27; }
+        h1 { color: #2d5a27; }
+        select { width: 100%; padding: 12px; font-size: 18px; margin: 20px 0; border-radius: 10px; border: 1px solid #2d5a27; }
+        .btn { display: inline-block; padding: 15px 25px; background: #2d5a27; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; margin-bottom: 20px; width: 80%; }
+        .player-box { background: #e9f5e8; padding: 20px; border-radius: 15px; }
+        audio { width: 100%; }
+        .footer { margin-top: 30px; font-size: 12px; color: #777; border-top: 1px solid #eee; padding-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>مصحف القارئ محمد اللحيدان 🎤</h1>
+    <p>استمع بخشوع واقرأ بتدبر - مشروع عمرة محمد</p>
+    
+    <select id="surahSelect" onchange="loadSurah()">
+        <option value="">-- اختر السورة (114 سورة) --</option>
+"""
+
+# قائمة الـ 114 سورة كاملة
+surahs = ["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه", "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر", "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج", "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس", "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات", "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", "المسد", "الإخلاص", "الفلق", "الناس"]
+
+for i, name in enumerate(surahs, 1):
+    html_content += f'        <option value="{i}">{name}</option>\n'
+
+html_content += """
+    </select>
+
+    <div id="displayArea" style="display:none;">
+        <h2 id="sName" style="color:#2d5a27;"></h2>
+        
+        <a id="readBtn" href="#" target="_blank" class="btn">📖 فتح السورة كاملة للقراءة والتدبر</a>
+        
+        <div class="player-box">
+            <p>🎧 تستمع الآن بصوت محمد اللحيدان:</p>
+            <audio id="audioPlayer" controls><source src="" type="audio/mpeg"></audio>
+        </div>
+    </div>
+
+    <div class="footer">
+        للرعاية ودعم رحلة العمرة: mohammeddescription3@gmail.com
+    </div>
+</div>
+
+<script>
+    function loadSurah() {
+        var val = document.getElementById("surahSelect").value;
+        var name = document.getElementById("surahSelect").options[document.getElementById("surahSelect").selectedIndex].text;
+        
+        if(val) {
+            document.getElementById("displayArea").style.display = "block";
+            document.getElementById("sName").innerText = "سورة " + name;
+            
+            // رابط القراءة من مصحف المدينة الشامل
+            document.getElementById("readBtn").href = "https://quran.ksu.edu.sa/index.php?l=ar#sr=" + val;
+            
+            // رابط الصوت (سيرفر القارئ محمد اللحيدان)
+            var audioId = val.padStart(3, '0');
+            document.getElementById("audioPlayer").src = "https://server8.mp3quran.net/lhdan/" + audioId + ".mp3";
+            document.getElementById("audioPlayer").play();
+        }
+    }
+</script>
+</body>
+</html>
+"""
+
+# حفظ وفتح
+with open("lhidan_quran.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+webbrowser.open('file://' + os.path.realpath("lhidan_quran.html"))
+print("تم تحديث الكود بصوت القارئ محمد اللحيدان!")
