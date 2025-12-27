@@ -2,56 +2,108 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مصحف محمد اللحيدان الشامل</title>
+    <title>المصحف الإلكتروني الشامل - صدقة جارية</title>
     <style>
-        body { background: #fdfaf1; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; }
-        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); max-width: 500px; margin: auto; border: 2px solid #2d5a27; }
-        h1 { color: #2d5a27; }
-        select { width: 100%; padding: 12px; font-size: 18px; margin: 20px 0; border-radius: 10px; border: 1px solid #2d5a27; }
-        .btn { display: inline-block; padding: 15px 25px; background: #2d5a27; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; width: 80%; margin-bottom: 20px; }
-        .player-box { background: #e9f5e8; padding: 20px; border-radius: 15px; }
+        body { background: #f4f7f4; font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; padding: 20px; color: #2c3e50; }
+        .container { background: white; padding: 35px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 550px; margin: auto; border-top: 6px solid #1a4d1a; }
+        h1 { color: #1a4d1a; margin-bottom: 10px; font-size: 28px; }
+        .motto { color: #2d5a27; font-weight: bold; margin-bottom: 25px; font-size: 18px; }
+        .selection-box { margin-bottom: 15px; text-align: right; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #1a4d1a; }
+        select { width: 100%; padding: 12px; font-size: 16px; border-radius: 10px; border: 2px solid #ddd; background: #fff; outline: none; margin-bottom: 15px; }
+        select:focus { border-color: #1a4d1a; }
+        .action-area { display: none; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn { display: block; padding: 15px; background: #1a4d1a; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; margin-bottom: 20px; transition: 0.3s; }
+        .btn:hover { background: #113311; }
+        .player-box { background: #f0f9f0; padding: 20px; border-radius: 15px; }
         audio { width: 100%; }
+        .footer { margin-top: 40px; font-size: 14px; color: #7f8c8d; }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>مصحف محمد اللحيدان 🎤</h1>
-    <p>مشروع صدقة جارية لرحلة العمرة</p>
-    
-    <select id="surahSelect" onchange="loadSurah()">
-        <option value="">-- اختر السورة (الفاتحة، البقرة، الكهف..) --</option>
-        <option value="1">الفاتحة</option>
-        <option value="2">البقرة</option>
-        <option value="18">الكهف</option>
-        <option value="36">يس</option>
-        <option value="67">الملك</option>
-        <option value="114">الناس</option>
-    </select>
 
-    <div id="displayArea" style="display:none;">
-        <h2 id="sName" style="color:#2d5a27;"></h2>
-        <a id="readBtn" href="#" target="_blank" class="btn">📖 قراءة وتدبر السورة كاملة</a>
+<div class="container">
+    <h1>المصحف الإلكتروني الجامع 📖</h1>
+    <p class="motto">"صدقة جارية لوجه الله تعالى"</p>
+
+    <div class="selection-box">
+        <label>1. اختر القارئ:</label>
+        <select id="readerSelect" onchange="updateContent()">
+            <option value="lhdan">محمد اللحيدان</option>
+            <option value="afs">مشاري العفاسي</option>
+            <option value="basit">عبد الباسط عبد الصمد (مرتل)</option>
+            <option value="uaiq">ماهر المعيقلي</option>
+            <option value="s_gmd">سعد الغامدي</option>
+        </select>
+    </div>
+
+    <div class="selection-box">
+        <label>2. اختر السورة:</label>
+        <select id="surahSelect" onchange="updateContent()">
+            <option value="">-- اختر السورة (114 سورة) --</option>
+        </select>
+    </div>
+
+    <div id="actionArea" class="action-area">
+        <h2 id="currentInfo"></h2>
+        <a id="readLink" href="#" target="_blank" class="btn">📖 قراءة وتفسير السورة كاملة</a>
+        
         <div class="player-box">
-            <p>🎧 استماع بصوت محمد اللحيدان:</p>
-            <audio id="audioPlayer" controls><source src="" type="audio/mpeg"></audio>
+            <p id="playerTitle">🎧 استماع:</p>
+            <audio id="mainAudio" controls><source src="" type="audio/mpeg"></audio>
         </div>
+    </div>
+
+    <div class="footer">
+        نسألكم الدعاء لصاحب الموقع ولوالديه <br>
+        تم التطوير ليكون متاحاً للجميع مجاناً
     </div>
 </div>
 
 <script>
-    function loadSurah() {
-        var val = document.getElementById("surahSelect").value;
-        var name = document.getElementById("surahSelect").options[document.getElementById("surahSelect").selectedIndex].text;
-        if(val) {
-            document.getElementById("displayArea").style.display = "block";
-            document.getElementById("sName").innerText = "سورة " + name;
-            document.getElementById("readBtn").href = "https://quran.ksu.edu.sa/index.php?l=ar#sr=" + val;
-            var audioId = val.padStart(3, '0');
-            document.getElementById("audioPlayer").src = "https://server8.mp3quran.net/lhdan/" + audioId + ".mp3";
-            document.getElementById("audioPlayer").play();
+    const surahNames = ["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه", "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر", "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج", "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس", "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات", "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", "المسد", "الإخلاص", "الفلق", "الناس"];
+
+    const sSelect = document.getElementById('surahSelect');
+    const rSelect = document.getElementById('readerSelect');
+
+    surahNames.forEach((name, index) => {
+        let opt = document.createElement('option');
+        opt.value = index + 1;
+        opt.innerHTML = (index + 1) + ". " + name;
+        sSelect.appendChild(opt);
+    });
+
+    function updateContent() {
+        const sVal = sSelect.value;
+        const rVal = rSelect.value;
+        const sName = sSelect.options[sSelect.selectedIndex].text;
+        const rName = rSelect.options[rSelect.selectedIndex].text;
+        
+        const area = document.getElementById('actionArea');
+        const audio = document.getElementById('mainAudio');
+        
+        if(sVal) {
+            area.style.display = 'block';
+            document.getElementById('currentInfo').innerText = "سورة " + sName.split('. ')[1];
+            document.getElementById('playerTitle').innerText = "🎧 استماع بصوت الشيخ " + rName + ":";
+            document.getElementById('readLink').href = "https://quran.ksu.edu.sa/index.php?l=ar#sr=" + sVal;
+            
+            let audioId = sVal.padStart(3, '0');
+            // تغيير السيرفر بناءً على القارئ
+            let server = (rVal === 'basit') ? 'https://server7.mp3quran.net/basit/' : 
+                         (rVal === 'lhdan') ? 'https://server8.mp3quran.net/lhdan/' :
+                         (rVal === 'afs') ? 'https://server8.mp3quran.net/afs/' :
+                         (rVal === 'uaiq') ? 'https://server12.mp3quran.net/maher/' :
+                         'https://server7.mp3quran.net/s_gmd/';
+            
+            audio.src = server + audioId + ".mp3";
+            audio.play();
         }
     }
 </script>
+
 </body>
 </html>
+
 
