@@ -2,183 +2,169 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>المصحف الإلكتروني واللعبة التعليمية</title>
+    <title>المصحف الإلكتروني الجامع - نظام التصحيح الشامل</title>
     <style>
-        body { background: #f4f7f4; font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; padding: 20px; color: #2c3e50; }
-        .container { background: white; padding: 35px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 550px; margin: auto; border-top: 6px solid #1a4d1a; }
-        h1 { color: #1a4d1a; margin-bottom: 10px; font-size: 28px; }
-        .motto { color: #2d5a27; font-weight: bold; margin-bottom: 25px; font-size: 18px; }
-        .selection-box { margin-bottom: 15px; text-align: right; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #1a4d1a; }
-        select { width: 100%; padding: 12px; font-size: 16px; border-radius: 10px; border: 2px solid #ddd; background: #fff; outline: none; margin-bottom: 15px; box-sizing: border-box; }
-        select:focus { border-color: #1a4d1a; }
-        .action-area { display: none; margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; }
-        .btn { display: block; padding: 15px; background: #1a4d1a; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; margin-bottom: 20px; cursor: pointer; border: none; width: 100%; font-size: 16px; transition: 0.3s; }
-        .btn:hover { opacity: 0.9; }
-        .btn-check { background: #2980b9; }
-        .btn-voice { background: #2c3e50; }
-        .player-box { background: #f0f9f0; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-        audio { width: 100%; }
-        /* نظام اللعبة الصوتية */
-        #voiceGameArea { margin-top: 20px; padding: 20px; border: 2px dashed #1a4d1a; border-radius: 15px; background: #fafafa; }
-        #resultText { font-size: 20px; margin-top: 10px; font-weight: bold; }
-        #voiceStatus { color: #7f8c8d; font-style: italic; }
+        :root { --primary: #1a4d1a; --secondary: #2d5a27; --bg: #f4f7f4; }
+        body { background: var(--bg); font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; padding: 20px; color: #2c3e50; }
+        .container { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 600px; margin: auto; border-top: 8px solid var(--primary); }
+        h1 { color: var(--primary); margin-bottom: 5px; }
+        .motto { color: var(--secondary); font-weight: bold; margin-bottom: 25px; }
+        
+        .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: right; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary); }
+        select { width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #ddd; outline: none; }
+        
+        .main-card { background: #fff; border: 1px solid #eee; border-radius: 20px; padding: 20px; display: none; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .btn { display: block; width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; text-decoration: none; font-size: 16px; }
+        .btn-audio { background: #f0f9f0; border: 1px solid #1a4d1a; color: var(--primary); }
+        .btn-read { background: var(--primary); color: white; }
+        .btn-mic { background: #2c3e50; color: white; }
+        .btn-stop { background: #e74c3c; color: white; }
+
+        #status { margin-top: 15px; padding: 15px; border-radius: 10px; font-weight: bold; }
+        .correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        
+        .quran-display { font-size: 22px; color: var(--primary); margin: 15px 0; padding: 15px; border-bottom: 2px dashed #eee; line-height: 1.6; }
+        audio { width: 100%; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>المصحف الإلكتروني الجامع 📖</h1>
-    <p class="motto">"صدقة جارية - لعبة التسميع التفاعلية"</p>
+    <p class="motto">استماع وتدبر وتصحيح آلي</p>
 
-    <div class="selection-box">
-        <label>1. اختر القارئ:</label>
-        <select id="readerSelect" onchange="updateContent()">
-            <option value="yasser">ياسر الدوسري</option>
-            <option value="lhdan">محمد اللحيدان</option>
-            <option value="afs">مشاري العفاسي</option>
-            <option value="basit">عبد الباسط عبد الصمد</option>
-            <option value="uaiq">ماهر المعيقلي</option>
-            <option value="s_gmd">سعد الغامدي</option>
-        </select>
+    <div class="selection-grid">
+        <div>
+            <label>🎙️ القارئ:</label>
+            <select id="reader" onchange="updateInterface()">
+                <option value="yasser">ياسر الدوسري</option>
+                <option value="s_gmd">سعد الغامدي</option>
+                <option value="afs">مشاري العفاسي</option>
+                <option value="uaiq">ماهر المعيقلي</option>
+                <option value="basit">عبد الباسط عبد الصمد</option>
+            </select>
+        </div>
+        <div>
+            <label>📖 السورة:</label>
+            <select id="surah" onchange="updateInterface()">
+                <option value="">-- اختر السورة --</option>
+            </select>
+        </div>
     </div>
 
-    <div class="selection-box">
-        <label>2. اختر السورة:</label>
-        <select id="surahSelect" onchange="updateContent()">
-            <option value="">-- اختر السورة --</option>
-        </select>
-    </div>
-
-    <div id="actionArea" class="action-area">
-        <div id="playerSection">
-            <h2 id="currentInfo"></h2>
-            <div class="player-box">
-                <p id="playerTitle">🎧 استماع:</p>
-                <audio id="mainAudio" controls><source src="" type="audio/mpeg"></audio>
-            </div>
+    <div id="mainArea" class="main-card">
+        <h2 id="surahTitle"></h2>
+        
+        <div class="btn-audio">
+            <p>🎧 استماع بصوت الشيخ:</p>
+            <audio id="audioPlayer" controls><source src="" type="audio/mpeg"></audio>
         </div>
 
-        <button onclick="toggleGame()" class="btn">🎮 ابدأ اختبار التسميع (إخفاء/إظهار الصوت)</button>
-
-        <div id="voiceGameArea" style="display:none;">
-            <button id="startRecord" class="btn btn-voice">🎙️ اضغط ثم اقرأ الآية الأولى</button>
-            <p id="voiceStatus">جاهز للاستماع...</p>
-            <div id="resultText"></div>
+        <a id="tadaborLink" href="#" target="_blank" class="btn btn-read">📖 القراءة وتفسير السورة</a>
+        
+        <div style="border-top: 2px solid #eee; margin-top: 20px; padding-top: 10px;">
+            <p style="font-weight:bold;">🎙️ تحدي التسميع الصوتي (أي آية):</p>
+            <div id="targetText" class="quran-display">اختر سورة لتحميل آيتها الأولى...</div>
+            <button id="micBtn" class="btn btn-mic" onclick="startRecognition()">🎙️ ابدأ التسميع الآن</button>
+            <div id="status">جاهز للاستماع...</div>
+            <p id="userWords" style="font-size: 14px; color: #666;"></p>
         </div>
-
-        <a id="readLink" href="#" target="_blank" class="btn btn-check">📖 فتح التفسير للتأكد</a>
     </div>
 </div>
 
 <script>
-    const surahNames = ["الفاتحة", "البقرة", "آل عمران", "النساء", "المائدة", "الأنعام", "الأعراف", "الأنفال", "التوبة", "يونس", "هود", "يوسف", "الرعد", "إبراهيم", "الحجر", "النحل", "الإسراء", "الكهف", "مريم", "طه", "الأنبياء", "الحج", "المؤمنون", "النور", "الفرقان", "الشعراء", "النمل", "القصص", "العنكبوت", "الروم", "لقمان", "السجدة", "الأحزاب", "سبأ", "فاطر", "يس", "الصافات", "ص", "الزمر", "غافر", "فصلت", "الشورى", "الزخرف", "الدخان", "الجاثية", "الأحقاف", "محمد", "الفتح", "الحجرات", "ق", "الذاريات", "الطور", "النجم", "القمر", "الرحمن", "الواقعة", "الحديد", "المجادلة", "الحشر", "الممتحنة", "الصف", "الجمعة", "المنافقون", "التغابن", "الطلاق", "التحريم", "الملك", "القلم", "الحاقة", "المعارج", "نوح", "الجن", "المزمل", "المدثر", "القيامة", "الإنسان", "المرسلات", "النبأ", "النازعات", "عبس", "التكوير", "الانفطار", "المطففين", "الانشقاق", "البروج", "الطارق", "الأعلى", "الغاشية", "الفجر", "البلد", "الشمس", "الليل", "الضحى", "الشرح", "التين", "العلق", "القدر", "البينة", "الزلزلة", "العاديات", "القارعة", "التكاثر", "العصر", "الهمزة", "الفيل", "قريش", "الماعون", "الكوثر", "الكافرون", "النصر", "المسد", "الإخلاص", "الفلق", "الناس"];
-    
-    // كلمات مفتاحية للتأكد من القراءة الصحيحة لأول آية
-    const correctKeywords = { 
-        "1": ["الحمد لله", "رب العالمين"], 
-        "2": ["الم", "ذالك الكتاب"], 
-        "3": ["الم", "الله لا اله"], 
-        "4": ["يا ايها الناس", "اتقوا ربكم"] 
-    };
+    let currentAyahText = "";
+    const surahSelect = document.getElementById('surah');
+    const audioPlayer = document.getElementById('audioPlayer');
 
-    const sSelect = document.getElementById('surahSelect');
-    const rSelect = document.getElementById('readerSelect');
+    // 1. تحميل قائمة السور من الـ API
+    fetch('https://api.alquran.cloud/v1/surah')
+        .then(res => res.json())
+        .then(data => {
+            data.data.forEach(s => {
+                let opt = document.createElement('option');
+                opt.value = s.number;
+                opt.text = s.number + ". " + s.name;
+                surahSelect.add(opt);
+            });
+        });
 
-    surahNames.forEach((name, index) => {
-        let opt = document.createElement('option');
-        opt.value = index + 1;
-        opt.innerHTML = (index + 1) + ". " + name;
-        sSelect.appendChild(opt);
-    });
+    // 2. تحديث الواجهة عند الاختيار
+    function updateInterface() {
+        const sNum = surahSelect.value;
+        const reader = document.getElementById('reader').value;
+        if(!sNum) return;
 
-    function updateContent() {
-        const sVal = sSelect.value;
-        const rVal = rSelect.value;
-        const area = document.getElementById('actionArea');
-        const audio = document.getElementById('mainAudio');
-        
-        if(sVal) {
-            area.style.display = 'block';
-            let audioId = sVal.padStart(3, '0');
-            
-            // تحديد السيرفرات لجميع القراء بما فيهم ياسر الدوسري
-            const servers = {
-                'yasser': 'https://server11.mp3quran.net/yasser/',
-                'lhdan': 'https://server8.mp3quran.net/lhdan/',
-                'afs': 'https://server8.mp3quran.net/afs/',
-                'basit': 'https://server7.mp3quran.net/basit/',
-                'uaiq': 'https://server12.mp3quran.net/maher/',
-                's_gmd': 'https://server7.mp3quran.net/s_gmd/'
-            };
+        document.getElementById('mainArea').style.display = 'block';
+        document.getElementById('surahTitle').innerText = "سورة " + surahSelect.options[surahSelect.selectedIndex].text.split('. ')[1];
+        document.getElementById('tadaborLink').href = "https://quran.ksu.edu.sa/index.php?l=ar#sr=" + sNum;
 
-            audio.src = servers[rVal] + audioId + ".mp3";
-            document.getElementById('currentInfo').innerText = "سورة " + surahNames[sVal-1];
-        }
-    }
-
-    function toggleGame() {
-        const pSection = document.getElementById('playerSection');
-        const vArea = document.getElementById('voiceGameArea');
-        const audio = document.getElementById('mainAudio');
-
-        if (vArea.style.display === 'none') {
-            vArea.style.display = 'block';
-            pSection.style.display = 'none';
-            audio.pause(); // إيقاف الصوت عند بدء اللعبة
-        } else {
-            vArea.style.display = 'none';
-            pSection.style.display = 'block';
-        }
-    }
-
-    // نظام التعرف على الصوت
-    const startBtn = document.getElementById('startRecord');
-    const status = document.getElementById('voiceStatus');
-    const resultDiv = document.getElementById('resultText');
-
-    if ('webkitSpeechRecognition' in window) {
-        const recognition = new webkitSpeechRecognition();
-        recognition.lang = 'ar-SA';
-        recognition.continuous = false;
-
-        startBtn.onclick = () => {
-            recognition.start();
-            status.innerText = "جاري الاستماع... اقرأ الآن";
-            startBtn.style.background = "#e74c3c";
-            resultDiv.innerText = "";
+        // تحديث الصوت
+        const servers = {
+            'yasser': 'https://server11.mp3quran.net/yasser/',
+            's_gmd': 'https://server7.mp3quran.net/s_gmd/',
+            'afs': 'https://server8.mp3quran.net/afs/',
+            'uaiq': 'https://server12.mp3quran.net/maher/',
+            'basit': 'https://server7.mp3quran.net/basit/'
         };
+        audioPlayer.src = servers[reader] + sNum.padStart(3, '0') + ".mp3";
+
+        // تحميل نص الآية الأولى للتصحيح
+        fetch(`https://api.alquran.cloud/v1/ayah/${sNum}:1/ar.quran-simple`)
+            .then(res => res.json())
+            .then(data => {
+                currentAyahText = data.data.text.replace(/[()]/g, "");
+                document.getElementById('targetText').innerText = "حاول قراءة: " + currentAyahText;
+            });
+    }
+
+    // 3. نظام التسميع والذكاء الاصطناعي
+    function startRecognition() {
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'ar-SA';
+        
+        const btn = document.getElementById('micBtn');
+        const status = document.getElementById('status');
+        const userWords = document.getElementById('userWords');
+
+        audioPlayer.pause();
+        recognition.start();
+        btn.innerText = "🛑 جاري الاستماع.. اقرأ الآن";
+        btn.className = "btn btn-stop";
 
         recognition.onresult = (event) => {
-            const userVoice = event.results[0][0].transcript;
-            const sVal = sSelect.value;
-            resultDiv.innerText = "سمعتك تقول: " + userVoice;
+            const speech = event.results[0][0].transcript;
+            userWords.innerText = "قلت: " + speech;
             
-            // التحقق من الكلمات المفتاحية
-            const keywords = correctKeywords[sVal] || [];
-            const isCorrect = keywords.some(word => userVoice.includes(word));
-
-            if (isCorrect) {
-                resultDiv.style.color = "green";
-                status.innerText = "✅ ما شاء الله! قراءة صحيحة";
+            // تنظيف النصوص للمقارنة (تجاهل الهمزات والمسافات)
+            const clean = (t) => t.replace(/[أإآ]/g, "ا").replace(/\s+/g, '').replace(/[ؤئ]/g, "و");
+            
+            if (clean(speech).includes(clean(currentAyahText)) || clean(currentAyahText).includes(clean(speech))) {
+                status.innerText = "✅ قراءة صحيحة! أحسنت";
+                status.className = "correct";
             } else {
-                resultDiv.style.color = "red";
-                status.innerText = "❌ لم أتأكد من القراءة، حاول بوضوح أكثر";
+                status.innerText = "❌ خطأ في التسميع.. حاول مرة أخرى";
+                status.className = "wrong";
             }
-            startBtn.style.background = "#2c3e50";
+            resetBtn();
         };
 
-        recognition.onerror = () => {
-            status.innerText = "تعذر الميكروفون.. تأكد من الأذونات";
-            startBtn.style.background = "#2c3e50";
-        };
-    } else {
-        status.innerText = "متصفحك لا يدعم التعرف على الصوت (يفضل Chrome)";
+        recognition.onerror = () => { resetBtn(); status.innerText = "خطأ: تأكد من الميكروفون (HTTPS مطلوب)"; };
+        
+        function resetBtn() {
+            btn.innerText = "🎙️ ابدأ التسميع الآن";
+            btn.className = "btn btn-mic";
+        }
     }
 </script>
 
 </body>
 </html>
+
 
 
 
