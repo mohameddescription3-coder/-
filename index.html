@@ -2,168 +2,255 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>المصحف الإلكتروني الجامع - نظام التصحيح الشامل</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة مصحف النور الإسطورية - نسخة النخبة</title>
     <style>
-        :root { --primary: #1a4d1a; --secondary: #2d5a27; --bg: #f4f7f4; }
-        body { background: var(--bg); font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; padding: 20px; color: #2c3e50; }
-        .container { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 600px; margin: auto; border-top: 8px solid var(--primary); }
-        h1 { color: var(--primary); margin-bottom: 5px; }
-        .motto { color: var(--secondary); font-weight: bold; margin-bottom: 25px; }
-        
-        .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: right; margin-bottom: 20px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary); }
-        select { width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #ddd; outline: none; }
-        
-        .main-card { background: #fff; border: 1px solid #eee; border-radius: 20px; padding: 20px; display: none; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        :root {
+            --gold: #d4af37;
+            --emerald: #052205;
+            --glass: rgba(0, 0, 0, 0.88);
+            --glow: 0 0 25px rgba(212, 175, 55, 0.6);
+        }
 
-        .btn { display: block; width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; text-decoration: none; font-size: 16px; }
-        .btn-audio { background: #f0f9f0; border: 1px solid #1a4d1a; color: var(--primary); }
-        .btn-read { background: var(--primary); color: white; }
-        .btn-mic { background: #2c3e50; color: white; }
-        .btn-stop { background: #e74c3c; color: white; }
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden; background: #000;
+            font-family: 'Segoe UI', Tahoma, sans-serif; color: white;
+        }
 
-        #status { margin-top: 15px; padding: 15px; border-radius: 10px; font-weight: bold; }
-        .correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .wrong { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        
-        .quran-display { font-size: 22px; color: var(--primary); margin: 15px 0; padding: 15px; border-bottom: 2px dashed #eee; line-height: 1.6; }
-        audio { width: 100%; margin-top: 10px; }
+        /* محرك الخلفية النجمية المتطور */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -5; }
+        .gradient-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent, #000 90%);
+            z-index: -4;
+        }
+
+        /* الآيات العائمة من العدم */
+        .floating-text {
+            position: absolute; color: rgba(212, 175, 55, 0.15);
+            font-size: 2.2rem; white-space: nowrap; pointer-events: none;
+            animation: floatMove 35s linear infinite; z-index: -2;
+            text-shadow: var(--glow); font-weight: bold;
+        }
+
+        @keyframes floatMove {
+            0% { transform: translateY(110vh) scale(0.7); opacity: 0; filter: blur(5px); }
+            15% { opacity: 1; filter: blur(0px); }
+            85% { opacity: 1; filter: blur(0px); }
+            100% { transform: translateY(-20vh) scale(1.2); opacity: 0; filter: blur(8px); }
+        }
+
+        /* الحاوية الزجاجية الإسطورية */
+        .wrapper {
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; z-index: 10; position: relative;
+        }
+
+        .main-card {
+            background: var(--glass); backdrop-filter: blur(40px);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 50px; padding: 45px; width: 95%; max-width: 550px;
+            box-shadow: 0 50px 120px rgba(0,0,0,1); text-align: center;
+            border-bottom: 5px solid var(--gold);
+        }
+
+        .ayah-zone {
+            background: rgba(255, 255, 255, 0.02); border-radius: 30px;
+            padding: 35px; margin: 25px 0; min-height: 180px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; color: var(--gold); line-height: 1.8;
+            border: 1px dashed rgba(212, 175, 55, 0.25);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        /* صف التحكم */
+        .control-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 25px; }
+        select {
+            background: rgba(255,255,255,0.06); color: white; border: 1px solid var(--gold);
+            padding: 14px; border-radius: 15px; flex: 1; outline: none; cursor: pointer;
+            font-size: 15px; transition: 0.3s;
+        }
+        select:hover { background: rgba(212, 175, 55, 0.1); }
+
+        /* ميكروفون النور */
+        .mic-btn {
+            width: 100px; height: 100px; border-radius: 50%; border: none;
+            background: linear-gradient(135deg, var(--gold), #8a6d1a);
+            font-size: 45px; cursor: pointer; transition: 0.5s;
+            box-shadow: var(--glow); position: relative;
+        }
+
+        .mic-btn.active { background: #ff4757; animation: pulse 1.2s infinite; transform: scale(1.1); }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.8); }
+            70% { box-shadow: 0 0 0 30px rgba(255, 71, 87, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+        }
+
+        .visualizer { display: flex; justify-content: center; gap: 8px; height: 45px; margin: 20px 0; }
+        .bar { width: 6px; height: 100%; background: var(--gold); border-radius: 10px; opacity: 0.2; transition: 0.2s; }
+        .active .bar { animation: dance 0.6s infinite alternate; opacity: 1; filter: brightness(1.3); }
+        @keyframes dance { from { height: 10px; } to { height: 45px; } }
+
+        audio { width: 100%; height: 40px; margin-top: 20px; opacity: 0.4; filter: invert(1); }
+        .footer-link { color: var(--gold); text-decoration: none; font-size: 14px; margin-top: 25px; display: block; font-weight: bold; opacity: 0.9; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>المصحف الإلكتروني الجامع 📖</h1>
-    <p class="motto">استماع وتدبر وتصحيح آلي</p>
+<canvas id="bg-canvas"></canvas>
+<div class="gradient-overlay"></div>
+<div id="floaters-layer"></div>
 
-    <div class="selection-grid">
-        <div>
-            <label>🎙️ القارئ:</label>
-            <select id="reader" onchange="updateInterface()">
+<div class="wrapper">
+    <div class="main-card">
+        <h1 style="color: var(--gold); margin: 0; font-size: 30px; letter-spacing: 1px;">مصحف النور 📖</h1>
+        <p style="font-size: 13px; opacity: 0.6; margin-bottom: 25px;">الإصدار الإسطوري - نخبة قراء العالم الإسلامي</p>
+
+        <div class="control-row">
+            <select id="reader" onchange="sync()">
+                <option value="lhdan">محمد اللحيدان</option>
+                <option value="abkr">إدريس أبكر</option>
                 <option value="yasser">ياسر الدوسري</option>
-                <option value="s_gmd">سعد الغامدي</option>
-                <option value="afs">مشاري العفاسي</option>
                 <option value="uaiq">ماهر المعيقلي</option>
-                <option value="basit">عبد الباسط عبد الصمد</option>
+                <option value="salmi">منصور السالمي</option>
+                <option value="hazza">هزاع البلوشي</option>
+                <option value="qtm">ناصر القطامي</option>
+                <option value="jleel">خالد الجليل</option>
+                <option value="wadee">وديع اليمني</option>
+                <option value="shur">سعود الشريم</option>
+                <option value="sds">عبد الرحمن السديس</option>
+                <option value="hassan">حسن صالح</option>
             </select>
-        </div>
-        <div>
-            <label>📖 السورة:</label>
-            <select id="surah" onchange="updateInterface()">
-                <option value="">-- اختر السورة --</option>
-            </select>
-        </div>
-    </div>
-
-    <div id="mainArea" class="main-card">
-        <h2 id="surahTitle"></h2>
-        
-        <div class="btn-audio">
-            <p>🎧 استماع بصوت الشيخ:</p>
-            <audio id="audioPlayer" controls><source src="" type="audio/mpeg"></audio>
+            <select id="surah" onchange="loadSurah()"></select>
         </div>
 
-        <a id="tadaborLink" href="#" target="_blank" class="btn btn-read">📖 القراءة وتفسير السورة</a>
-        
-        <div style="border-top: 2px solid #eee; margin-top: 20px; padding-top: 10px;">
-            <p style="font-weight:bold;">🎙️ تحدي التسميع الصوتي (أي آية):</p>
-            <div id="targetText" class="quran-display">اختر سورة لتحميل آيتها الأولى...</div>
-            <button id="micBtn" class="btn btn-mic" onclick="startRecognition()">🎙️ ابدأ التسميع الآن</button>
-            <div id="status">جاهز للاستماع...</div>
-            <p id="userWords" style="font-size: 14px; color: #666;"></p>
+        <div class="ayah-zone" id="ayahText">تحميل الوحي...</div>
+
+        <div class="visualizer" id="viz">
+            <div class="bar" style="animation-delay: 0s"></div>
+            <div class="bar" style="animation-delay: 0.1s"></div>
+            <div class="bar" style="animation-delay: 0.2s"></div>
+            <div class="bar" style="animation-delay: 0.3s"></div>
+            <div class="bar" style="animation-delay: 0.4s"></div>
         </div>
+
+        <button class="mic-btn" id="micBtn" onclick="startTasmie()">🎙️</button>
+        <div id="status" style="margin-top: 15px; font-weight: bold; letter-spacing: 1px;">جاهز للاستماع لتلاوتك</div>
+
+        <audio id="player" controls></audio>
+        
+        <a id="tadabor" href="#" target="_blank" class="footer-link">📖 التفسير والتدبر لهذه السورة</a>
     </div>
 </div>
 
 <script>
-    let currentAyahText = "";
-    const surahSelect = document.getElementById('surah');
-    const audioPlayer = document.getElementById('audioPlayer');
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.onresize = resize; resize();
 
-    // 1. تحميل قائمة السور من الـ API
+    for(let i=0; i<150; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2, s: Math.random()*0.5});
+    function draw() {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(212, 175, 55, 0.5)";
+        stars.forEach(s => {
+            ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+            s.y -= s.s; if(s.y < 0) s.y = canvas.height;
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+
+    const phrases = ["وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ", "إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ", "وَكَذَٰلِكَ أَنزَلْنَاهُ قُرْآنًا عَرَبِيًّا"];
+    setInterval(() => {
+        const d = document.createElement('div');
+        d.className = 'floating-text';
+        d.innerText = phrases[Math.floor(Math.random()*phrases.length)];
+        d.style.left = Math.random()*70 + 5 + "%";
+        document.getElementById('floaters-layer').appendChild(d);
+        setTimeout(() => d.remove(), 35000);
+    }, 9000);
+
+    let currentIdx = 0;
+    let ayahs = [];
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'ar-SA';
+
     fetch('https://api.alquran.cloud/v1/surah')
-        .then(res => res.json())
-        .then(data => {
-            data.data.forEach(s => {
-                let opt = document.createElement('option');
-                opt.value = s.number;
-                opt.text = s.number + ". " + s.name;
-                surahSelect.add(opt);
+        .then(r => r.json()).then(d => {
+            const s = document.getElementById('surah');
+            d.data.forEach(item => {
+                let o = document.createElement('option');
+                o.value = item.number; o.text = item.name; s.add(o);
             });
+            loadSurah();
         });
 
-    // 2. تحديث الواجهة عند الاختيار
-    function updateInterface() {
-        const sNum = surahSelect.value;
-        const reader = document.getElementById('reader').value;
-        if(!sNum) return;
-
-        document.getElementById('mainArea').style.display = 'block';
-        document.getElementById('surahTitle').innerText = "سورة " + surahSelect.options[surahSelect.selectedIndex].text.split('. ')[1];
-        document.getElementById('tadaborLink').href = "https://quran.ksu.edu.sa/index.php?l=ar#sr=" + sNum;
-
-        // تحديث الصوت
-        const servers = {
-            'yasser': 'https://server11.mp3quran.net/yasser/',
-            's_gmd': 'https://server7.mp3quran.net/s_gmd/',
-            'afs': 'https://server8.mp3quran.net/afs/',
-            'uaiq': 'https://server12.mp3quran.net/maher/',
-            'basit': 'https://server7.mp3quran.net/basit/'
-        };
-        audioPlayer.src = servers[reader] + sNum.padStart(3, '0') + ".mp3";
-
-        // تحميل نص الآية الأولى للتصحيح
-        fetch(`https://api.alquran.cloud/v1/ayah/${sNum}:1/ar.quran-simple`)
-            .then(res => res.json())
-            .then(data => {
-                currentAyahText = data.data.text.replace(/[()]/g, "");
-                document.getElementById('targetText').innerText = "حاول قراءة: " + currentAyahText;
+    function loadSurah() {
+        const n = document.getElementById('surah').value;
+        fetch(`https://api.alquran.cloud/v1/surah/${n}/ar.quran-simple`)
+            .then(r => r.json()).then(d => {
+                ayahs = d.data.ayahs; currentIdx = 0;
+                display(); sync();
             });
     }
 
-    // 3. نظام التسميع والذكاء الاصطناعي
-    function startRecognition() {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'ar-SA';
-        
-        const btn = document.getElementById('micBtn');
-        const status = document.getElementById('status');
-        const userWords = document.getElementById('userWords');
+    function display() { document.getElementById('ayahText').innerText = ayahs[currentIdx].text; }
 
-        audioPlayer.pause();
-        recognition.start();
-        btn.innerText = "🛑 جاري الاستماع.. اقرأ الآن";
-        btn.className = "btn btn-stop";
-
-        recognition.onresult = (event) => {
-            const speech = event.results[0][0].transcript;
-            userWords.innerText = "قلت: " + speech;
-            
-            // تنظيف النصوص للمقارنة (تجاهل الهمزات والمسافات)
-            const clean = (t) => t.replace(/[أإآ]/g, "ا").replace(/\s+/g, '').replace(/[ؤئ]/g, "و");
-            
-            if (clean(speech).includes(clean(currentAyahText)) || clean(currentAyahText).includes(clean(speech))) {
-                status.innerText = "✅ قراءة صحيحة! أحسنت";
-                status.className = "correct";
-            } else {
-                status.innerText = "❌ خطأ في التسميع.. حاول مرة أخرى";
-                status.className = "wrong";
-            }
-            resetBtn();
+    function sync() {
+        const sNum = document.getElementById('surah').value;
+        const r = document.getElementById('reader').value;
+        const map = {
+            'lhdan': 'https://server8.mp3quran.net/lhdan/',
+            'abkr': 'https://server6.mp3quran.net/abkr/',
+            'yasser': 'https://server11.mp3quran.net/yasser/',
+            'uaiq': 'https://server12.mp3quran.net/maher/',
+            'salmi': 'https://server14.mp3quran.net/salmi/',
+            'hazza': 'https://server11.mp3quran.net/hazza/',
+            'qtm': 'https://server11.mp3quran.net/qtm/',
+            'jleel': 'https://server10.mp3quran.net/jleel/',
+            'wadee': 'https://server13.mp3quran.net/wadee/',
+            'shur': 'https://server7.mp3quran.net/shur/',
+            'sds': 'https://server7.mp3quran.net/sds/',
+            'hassan': 'https://server13.mp3quran.net/hassan_saleh/'
         };
-
-        recognition.onerror = () => { resetBtn(); status.innerText = "خطأ: تأكد من الميكروفون (HTTPS مطلوب)"; };
-        
-        function resetBtn() {
-            btn.innerText = "🎙️ ابدأ التسميع الآن";
-            btn.className = "btn btn-mic";
-        }
+        document.getElementById('player').src = map[r] + sNum.padStart(3, '0') + ".mp3";
+        document.getElementById('tadabor').href = `https://quran.ksu.edu.sa/index.php?l=ar#sr=${sNum}`;
     }
-</script>
 
+    function startTasmie() { try { recognition.start(); } catch(e) { recognition.stop(); } }
+
+    recognition.onstart = () => {
+        document.getElementById('micBtn').classList.add('active');
+        document.getElementById('viz').classList.add('active');
+        document.getElementById('status').innerText = "🔴 أسمعك الآن، تفضل بالتلاوة...";
+    };
+
+    recognition.onresult = (e) => {
+        const speech = e.results[0][0].transcript;
+        const target = ayahs[currentIdx].text;
+        const clean = (t) => t.replace(/[أإآ]/g, "ا").replace(/\s+/g, '').replace(/[ًٌٍَُِّْ]/g, "").replace(/ة/g, "ه");
+
+        if(clean(speech).includes(clean(target)) || clean(target).includes(clean(speech))) {
+            document.getElementById('status').innerHTML = "<span style='color:#2ecc71'>✅ تلاوة صحيحة، أحسنت!</span>";
+            setTimeout(() => { if(currentIdx < ayahs.length-1) { currentIdx++; display(); } }, 1500);
+        } else {
+            document.getElementById('status').innerHTML = "<span style='color:#ff4757'>❌ خطأ في القراءة، جرب ثانية</span>";
+        }
+    };
+
+    recognition.onend = () => {
+        document.getElementById('micBtn').classList.remove('active');
+        document.getElementById('viz').classList.remove('active');
+    };
+</script>
 </body>
 </html>
+
 
 
 
