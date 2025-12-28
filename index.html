@@ -3,253 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة مصحف النور الإسطورية - نسخة النخبة</title>
+    <title>محراب النور العظيم - إصدار الـ 114 سورة</title>
     <style>
+        /* إعدادات الخطوط والأساسات الملكية */
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Reem+Kufi:wght@400;700&display=swap');
+
         :root {
-            --gold: #d4af37;
-            --emerald: #052205;
-            --glass: rgba(0, 0, 0, 0.88);
-            --glow: 0 0 25px rgba(212, 175, 55, 0.6);
+            --gold-primary: #d4af37;
+            --gold-secondary: #f1c40f;
+            --deep-void: #020a02;
+            --emerald-shadow: #041604;
+            --glow-strength: 0 0 40px rgba(212, 175, 55, 0.4);
+            --transition-ultra: 3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden; background: #000;
-            font-family: 'Segoe UI', Tahoma, sans-serif; color: white;
+            width: 100%; height: 100%; overflow: hidden;
+            background-color: var(--deep-void);
+            font-family: 'Amiri', serif;
+            color: #fff; cursor: none; /* الماوس مخفي لزيادة الانغماس */
         }
 
-        /* محرك الخلفية النجمية المتطور */
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -5; }
-        .gradient-overlay {
+        /* طبقات الخلفية المتعددة */
+        #master-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, transparent, #000 90%);
-            z-index: -4;
+            z-index: -10; pointer-events: none;
         }
 
-        /* الآيات العائمة من العدم */
-        .floating-text {
-            position: absolute; color: rgba(212, 175, 55, 0.15);
-            font-size: 2.2rem; white-space: nowrap; pointer-events: none;
-            animation: floatMove 35s linear infinite; z-index: -2;
-            text-shadow: var(--glow); font-weight: bold;
+        .background-shroud {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--deep-void) 85%);
+            z-index: -5;
         }
 
-        @keyframes floatMove {
-            0% { transform: translateY(110vh) scale(0.7); opacity: 0; filter: blur(5px); }
-            15% { opacity: 1; filter: blur(0px); }
-            85% { opacity: 1; filter: blur(0px); }
-            100% { transform: translateY(-20vh) scale(1.2); opacity: 0; filter: blur(8px); }
+        /* الرؤى الروحانية السينمائية */
+        .spiritual-vision-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1590076215667-873d3148f029?q=80&w=2070&auto=format&fit=crop') center/cover;
+            opacity: 0; mix-blend-mode: overlay; filter: sepia(1) brightness(0.1) contrast(1.2);
+            animation: cinematicPulse 120s infinite ease-in-out; z-index: -8;
         }
 
-        /* الحاوية الزجاجية الإسطورية */
-        .wrapper {
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh; z-index: 10; position: relative;
+        @keyframes cinematicPulse {
+            0%, 100% { opacity: 0; transform: scale(1.0); filter: blur(5px); }
+            50% { opacity: 0.15; transform: scale(1.15); filter: blur(0px); }
         }
 
-        .main-card {
-            background: var(--glass); backdrop-filter: blur(40px);
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            border-radius: 50px; padding: 45px; width: 95%; max-width: 550px;
-            box-shadow: 0 50px 120px rgba(0,0,0,1); text-align: center;
-            border-bottom: 5px solid var(--gold);
+        /* نظام الساعة الإسطوري */
+        .royal-time-module {
+            position: fixed; top: 50px; left: 60px; /* تم نقلها لليسار لترك اليمين للقائمة */
+            text-align: left; z-index: 100;
+            font-family: 'Reem Kufi', sans-serif;
+            pointer-events: none;
         }
 
-        .ayah-zone {
-            background: rgba(255, 255, 255, 0.02); border-radius: 30px;
-            padding: 35px; margin: 25px 0; min-height: 180px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 30px; color: var(--gold); line-height: 1.8;
-            border: 1px dashed rgba(212, 175, 55, 0.25);
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        #time-digits {
+            font-size: 3.5rem; color: var(--gold-primary);
+            text-shadow: var(--glow-strength); letter-spacing: 5px;
+            font-weight: 300; line-height: 1;
         }
 
-        /* صف التحكم */
-        .control-row { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 25px; }
-        select {
-            background: rgba(255,255,255,0.06); color: white; border: 1px solid var(--gold);
-            padding: 14px; border-radius: 15px; flex: 1; outline: none; cursor: pointer;
-            font-size: 15px; transition: 0.3s;
-        }
-        select:hover { background: rgba(212, 175, 55, 0.1); }
-
-        /* ميكروفون النور */
-        .mic-btn {
-            width: 100px; height: 100px; border-radius: 50%; border: none;
-            background: linear-gradient(135deg, var(--gold), #8a6d1a);
-            font-size: 45px; cursor: pointer; transition: 0.5s;
-            box-shadow: var(--glow); position: relative;
+        /* قائمة اختيار السور الملكية (الجديدة) */
+        .surah-navigation {
+            position: fixed; top: 50px; right: 60px;
+            z-index: 200; cursor: default;
         }
 
-        .mic-btn.active { background: #ff4757; animation: pulse 1.2s infinite; transform: scale(1.1); }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.8); }
-            70% { box-shadow: 0 0 0 30px rgba(255, 71, 87, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+        #surah-dropdown {
+            background: rgba(212, 175, 55, 0.05);
+            backdrop-filter: blur(15px);
+            color: var(--gold-primary);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 12px 25px;
+            border-radius: 20px;
+            font-family: 'Amiri', serif;
+            font-size: 1.3rem;
+            outline: none;
+            cursor: pointer;
+            transition: 0.5s;
         }
 
-        .visualizer { display: flex; justify-content: center; gap: 8px; height: 45px; margin: 20px 0; }
-        .bar { width: 6px; height: 100%; background: var(--gold); border-radius: 10px; opacity: 0.2; transition: 0.2s; }
-        .active .bar { animation: dance 0.6s infinite alternate; opacity: 1; filter: brightness(1.3); }
-        @keyframes dance { from { height: 10px; } to { height: 45px; } }
+        #surah-dropdown:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold-primary);
+            box-shadow: var(--glow-strength);
+        }
 
-        audio { width: 100%; height: 40px; margin-top: 20px; opacity: 0.4; filter: invert(1); }
-        .footer-link { color: var(--gold); text-decoration: none; font-size: 14px; margin-top: 25px; display: block; font-weight: bold; opacity: 0.9; }
+        #surah-dropdown option {
+            background: var(--deep-void);
+            color: #fff;
+        }
+
+        /* الآيات الطائرة */
+        .flying-scripture {
+            position: absolute; color: rgba(212, 175, 55, 0.03);
+            font-size: 2.8rem; pointer-events: none;
+            white-space: nowrap; z-index: -2;
+            will-change: transform, opacity;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+        }
+
+        /* المحراب المركزي */
+        .miracle-shrine {
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; height: 100vh; width: 100%;
+            position: relative; z-index: 50;
+        }
+
+        .ayah-frame {
+            position: relative; padding: 60px;
+            width: 85%; max-width: 1000px; text-align: center;
+        }
+
+        .shrine-decoration {
+            width: 300px; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+            margin: 40px auto; opacity: 0.3;
+            box-shadow: 0 0 10px var(--gold-primary);
+        }
+
+        #ayah-content {
+            font-size: clamp(26px, 4.2vw, 52px);
+            color: var(--gold-primary);
+            line-height: 2.1; font-weight: 400;
+            text-shadow: 0 0 50px rgba(212, 175, 55, 0.6);
+            opacity: 0; transform: translateY(30px) scale(0.98);
+            transition: opacity 4s ease, transform 5s ease;
+        }
+
+        #ayah-content.visible {
+            opacity: 1; transform: translateY(0) scale(1);
+        }
+
+        .edge-glow {
+            position: fixed; width: 100%; height: 100%;
+            box-shadow: inset 0 0 150px rgba(0, 0, 0, 1);
+            pointer-events: none; z-index: 90;
+        }
     </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
-<div class="gradient-overlay"></div>
-<div id="floaters-layer"></div>
+    <canvas id="master-canvas"></canvas>
+    <div class="background-shroud"></div>
+    <div class="spiritual-vision-layer"></div>
+    <div class="edge-glow"></div>
+    <div id="flying-container"></div>
 
-<div class="wrapper">
-    <div class="main-card">
-        <h1 style="color: var(--gold); margin: 0; font-size: 30px; letter-spacing: 1px;">مصحف النور 📖</h1>
-        <p style="font-size: 13px; opacity: 0.6; margin-bottom: 25px;">الإصدار الإسطوري - نخبة قراء العالم الإسلامي</p>
-
-        <div class="control-row">
-            <select id="reader" onchange="sync()">
-                <option value="lhdan">محمد اللحيدان</option>
-                <option value="abkr">إدريس أبكر</option>
-                <option value="yasser">ياسر الدوسري</option>
-                <option value="uaiq">ماهر المعيقلي</option>
-                <option value="salmi">منصور السالمي</option>
-                <option value="hazza">هزاع البلوشي</option>
-                <option value="qtm">ناصر القطامي</option>
-                <option value="jleel">خالد الجليل</option>
-                <option value="wadee">وديع اليمني</option>
-                <option value="shur">سعود الشريم</option>
-                <option value="sds">عبد الرحمن السديس</option>
-                <option value="hassan">حسن صالح</option>
-            </select>
-            <select id="surah" onchange="loadSurah()"></select>
-        </div>
-
-        <div class="ayah-zone" id="ayahText">تحميل الوحي...</div>
-
-        <div class="visualizer" id="viz">
-            <div class="bar" style="animation-delay: 0s"></div>
-            <div class="bar" style="animation-delay: 0.1s"></div>
-            <div class="bar" style="animation-delay: 0.2s"></div>
-            <div class="bar" style="animation-delay: 0.3s"></div>
-            <div class="bar" style="animation-delay: 0.4s"></div>
-        </div>
-
-        <button class="mic-btn" id="micBtn" onclick="startTasmie()">🎙️</button>
-        <div id="status" style="margin-top: 15px; font-weight: bold; letter-spacing: 1px;">جاهز للاستماع لتلاوتك</div>
-
-        <audio id="player" controls></audio>
-        
-        <a id="tadabor" href="#" target="_blank" class="footer-link">📖 التفسير والتدبر لهذه السورة</a>
+    <div class="surah-navigation">
+        <select id="surah-dropdown" onchange="handleSurahChange()">
+            <option value="" disabled>اختر السورة الملكية...</option>
+        </select>
     </div>
-</div>
 
-<script>
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    window.onresize = resize; resize();
+    <div class="royal-time-module">
+        <div id="time-digits">00:00:00</div>
+        <div style="font-size: 0.9rem; color: var(--gold-secondary); opacity: 0.5; margin-top: 10px;">توقيت المحراب</div>
+    </div>
 
-    for(let i=0; i<150; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2, s: Math.random()*0.5});
-    function draw() {
-        ctx.clearRect(0,0,canvas.width, canvas.height);
-        ctx.fillStyle = "rgba(212, 175, 55, 0.5)";
-        stars.forEach(s => {
-            ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
-            s.y -= s.s; if(s.y < 0) s.y = canvas.height;
-        });
-        requestAnimationFrame(draw);
-    }
-    draw();
+    <main class="miracle-shrine">
+        <div class="ayah-frame">
+            <div class="shrine-decoration"></div>
+            <h2 id="ayah-content">أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ</h2>
+            <div class="shrine-decoration"></div>
+        </div>
+    </main>
 
-    const phrases = ["وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ", "إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ", "وَكَذَٰلِكَ أَنزَلْنَاهُ قُرْآنًا عَرَبِيًّا"];
-    setInterval(() => {
-        const d = document.createElement('div');
-        d.className = 'floating-text';
-        d.innerText = phrases[Math.floor(Math.random()*phrases.length)];
-        d.style.left = Math.random()*70 + 5 + "%";
-        document.getElementById('floaters-layer').appendChild(d);
-        setTimeout(() => d.remove(), 35000);
-    }, 9000);
+    <script>
+        /**
+         * محرك النور الإسطوري - Magnum Opus Engine (Version 2.0)
+         * دعم 114 سورة + فيزياء الجسيمات
+         */
 
-    let currentIdx = 0;
-    let ayahs = [];
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'ar-SA';
-
-    fetch('https://api.alquran.cloud/v1/surah')
-        .then(r => r.json()).then(d => {
-            const s = document.getElementById('surah');
-            d.data.forEach(item => {
-                let o = document.createElement('option');
-                o.value = item.number; o.text = item.name; s.add(o);
-            });
-            loadSurah();
-        });
-
-    function loadSurah() {
-        const n = document.getElementById('surah').value;
-        fetch(`https://api.alquran.cloud/v1/surah/${n}/ar.quran-simple`)
-            .then(r => r.json()).then(d => {
-                ayahs = d.data.ayahs; currentIdx = 0;
-                display(); sync();
-            });
-    }
-
-    function display() { document.getElementById('ayahText').innerText = ayahs[currentIdx].text; }
-
-    function sync() {
-        const sNum = document.getElementById('surah').value;
-        const r = document.getElementById('reader').value;
-        const map = {
-            'lhdan': 'https://server8.mp3quran.net/lhdan/',
-            'abkr': 'https://server6.mp3quran.net/abkr/',
-            'yasser': 'https://server11.mp3quran.net/yasser/',
-            'uaiq': 'https://server12.mp3quran.net/maher/',
-            'salmi': 'https://server14.mp3quran.net/salmi/',
-            'hazza': 'https://server11.mp3quran.net/hazza/',
-            'qtm': 'https://server11.mp3quran.net/qtm/',
-            'jleel': 'https://server10.mp3quran.net/jleel/',
-            'wadee': 'https://server13.mp3quran.net/wadee/',
-            'shur': 'https://server7.mp3quran.net/shur/',
-            'sds': 'https://server7.mp3quran.net/sds/',
-            'hassan': 'https://server13.mp3quran.net/hassan_saleh/'
+        const CONFIG = {
+            ayahInterval: 14000,
+            particleCount: 180,
+            floatingInterval: 10000,
+            colors: ['#d4af37', '#f1c40f', '#b8860b']
         };
-        document.getElementById('player').src = map[r] + sNum.padStart(3, '0') + ".mp3";
-        document.getElementById('tadabor').href = `https://quran.ksu.edu.sa/index.php?l=ar#sr=${sNum}`;
-    }
 
-    function startTasmie() { try { recognition.start(); } catch(e) { recognition.stop(); } }
+        const state = {
+            ayahs: [],
+            currentAyahIndex: 0,
+            mouse: { x: -1000, y: -1000 },
+            cycleTimer: null
+        };
 
-    recognition.onstart = () => {
-        document.getElementById('micBtn').classList.add('active');
-        document.getElementById('viz').classList.add('active');
-        document.getElementById('status').innerText = "🔴 أسمعك الآن، تفضل بالتلاوة...";
-    };
+        // 1. محرك الرسوميات (Physics Engine)
+        const canvas = document.getElementById('master-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
 
-    recognition.onresult = (e) => {
-        const speech = e.results[0][0].transcript;
-        const target = ayahs[currentIdx].text;
-        const clean = (t) => t.replace(/[أإآ]/g, "ا").replace(/\s+/g, '').replace(/[ًٌٍَُِّْ]/g, "").replace(/ة/g, "ه");
-
-        if(clean(speech).includes(clean(target)) || clean(target).includes(clean(speech))) {
-            document.getElementById('status').innerHTML = "<span style='color:#2ecc71'>✅ تلاوة صحيحة، أحسنت!</span>";
-            setTimeout(() => { if(currentIdx < ayahs.length-1) { currentIdx++; display(); } }, 1500);
-        } else {
-            document.getElementById('status').innerHTML = "<span style='color:#ff4757'>❌ خطأ في القراءة، جرب ثانية</span>";
+        class Particle {
+            constructor() { this.init(); }
+            init() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.8 + 0.2;
+                this.baseX = this.x; this.baseY = this.y;
+                this.density = (Math.random() * 40) + 5;
+                this.velocity = Math.random() * 0.5 + 0.1;
+                this.color = CONFIG.colors[Math.floor(Math.random() * CONFIG.colors.length)];
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = 0.4;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+            update() {
+                let dx = state.mouse.x - this.x;
+                let dy = state.mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 150) {
+                    this.x -= (dx / distance) * (150 - distance) / 10;
+                    this.y -= (dy / distance) * (150 - distance) / 10;
+                } else {
+                    this.y -= this.velocity;
+                    if (this.y < 0) this.y = canvas.height;
+                }
+            }
         }
-    };
 
-    recognition.onend = () => {
-        document.getElementById('micBtn').classList.remove('active');
-        document.getElementById('viz').classList.remove('active');
-    };
-</script>
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < CONFIG.particleCount; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        // 2. محرك الوقت
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('time-digits').innerText = now.toLocaleTimeString('en-GB');
+        }
+
+        // 3. محرك جلب السور (114 سورة)
+        async function initSurahList() {
+            const dropdown = document.getElementById('surah-dropdown');
+            const response = await fetch('https://api.alquran.cloud/v1/surah');
+            const data = await response.json();
+            
+            data.data.forEach(surah => {
+                const opt = document.createElement('option');
+                opt.value = surah.number;
+                opt.innerText = `${surah.number}. ${surah.name}`;
+                dropdown.appendChild(opt);
+            });
+            
+            // البدء بسورة يس كافتراض إسطوري
+            dropdown.value = 36;
+            handleSurahChange();
+        }
+
+        async function handleSurahChange() {
+            const num = document.getElementById('surah-dropdown').value;
+            if (state.cycleTimer) clearInterval(state.cycleTimer);
+            
+            const response = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.quran-simple`);
+            const data = await response.json();
+            
+            state.ayahs = data.data.ayahs;
+            state.currentAyahIndex = 0;
+            
+            startAyahCycle();
+        }
+
+        function startAyahCycle() {
+            const content = document.getElementById('ayah-content');
+            
+            const update = () => {
+                content.classList.remove('visible');
+                setTimeout(() => {
+                    content.innerText = state.ayahs[state.currentAyahIndex].text;
+                    content.classList.add('visible');
+                    state.currentAyahIndex = (state.currentAyahIndex + 1) % state.ayahs.length;
+                }, 4000);
+            };
+
+            update();
+            state.cycleTimer = setInterval(update, CONFIG.ayahInterval);
+        }
+
+        // 4. الآيات الطائرة
+        function spawnFloatingText() {
+            const phrases = ["سُبْحَانَ اللَّهِ", "لَا إِلَهَ إِلَّا اللَّهُ", "اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ", "أَسْتَغْفِرُ اللَّهَ"];
+            const div = document.createElement('div');
+            div.className = 'flying-scripture';
+            div.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+            div.style.left = (Math.random() * 80 + 10) + "%";
+            div.style.transition = `transform 40s linear, opacity 5s ease`;
+            document.getElementById('flying-container').appendChild(div);
+            
+            requestAnimationFrame(() => {
+                div.style.transform = `translateY(-120vh)`;
+                div.style.opacity = "0.6";
+            });
+            setTimeout(() => div.remove(), 40000);
+        }
+
+        // التشغيل
+        initCanvas(); animate(); initSurahList();
+        setInterval(updateClock, 1000);
+        setInterval(spawnFloatingText, CONFIG.floatingInterval);
+        window.addEventListener('mousemove', e => { state.mouse.x = e.x; state.mouse.y = e.y; });
+        window.addEventListener('resize', initCanvas);
+    </script>
 </body>
 </html>
+
 
 
 
